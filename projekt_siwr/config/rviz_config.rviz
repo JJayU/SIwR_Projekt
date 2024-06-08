@@ -6,6 +6,8 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
+        - /TF1
+        - /TF1/Tree1
         - /PoseWithCovariance1/Covariance1
       Splitter Ratio: 0.5
     Tree Height: 708
@@ -59,7 +61,19 @@ Visualization Manager:
           Value: false
         base_scan:
           Value: false
-        caster_back_link:
+        camera_depth_frame:
+          Value: false
+        camera_depth_optical_frame:
+          Value: false
+        camera_link:
+          Value: false
+        camera_rgb_frame:
+          Value: false
+        camera_rgb_optical_frame:
+          Value: false
+        caster_back_left_link:
+          Value: false
+        caster_back_right_link:
           Value: false
         imu_link:
           Value: false
@@ -80,7 +94,16 @@ Visualization Manager:
             base_link:
               base_scan:
                 {}
-              caster_back_link:
+              camera_link:
+                camera_depth_frame:
+                  camera_depth_optical_frame:
+                    {}
+                camera_rgb_frame:
+                  camera_rgb_optical_frame:
+                    {}
+              caster_back_left_link:
+                {}
+              caster_back_right_link:
                 {}
               imu_link:
                 {}
@@ -93,7 +116,7 @@ Visualization Manager:
     - Alpha: 1
       Class: rviz_default_plugins/RobotModel
       Collision Enabled: false
-      Description File: /opt/ros/humble/share/turtlebot3_gazebo/urdf/turtlebot3_burger.urdf
+      Description File: /opt/ros/humble/share/turtlebot3_gazebo/urdf/turtlebot3_waffle.urdf
       Description Source: File
       Description Topic:
         Depth: 5
@@ -122,7 +145,33 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        caster_back_link:
+        camera_depth_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        camera_depth_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        camera_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        camera_rgb_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        camera_rgb_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        caster_back_left_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        caster_back_right_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -230,7 +279,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 6.638178825378418
+      Distance: 3.9898593425750732
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -245,10 +294,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.8853981494903564
+      Pitch: 0.5353981256484985
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 1.3553977012634277
+      Yaw: 1.4503982067108154
     Saved: ~
 Window Geometry:
   Displays:
