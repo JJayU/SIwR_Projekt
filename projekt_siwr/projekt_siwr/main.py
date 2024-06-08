@@ -6,11 +6,13 @@ from sensor_msgs.msg import NavSatFix
 import gtsam
 from gtsam import symbol_shorthand as sh
 from geometry_msgs.msg import PoseWithCovarianceStamped
+from sensor_msgs.msg import LaserScan
 import tf_transformations
 import numpy as np
 import utm
+from statistics import mean 
 
-# ROS2 node estimating robot position from Odometry, IMU and GPS
+# ROS2 node estimating robot position from Odometry, Landmark and GPS
 # Jakub Junkiert 2024
 
 class SimpleOdometryNode(Node):
@@ -20,6 +22,7 @@ class SimpleOdometryNode(Node):
         # Subcribers for odom, GPS and IMU
         self.odom_sub = self.create_subscription(Odometry, 'odom', self.odom_callback, 10)
         self.gps_sub = self.create_subscription(NavSatFix, 'gps/data', self.gps_callback, 10)
+        self.laser_sub = self.create_subscription(LaserScan, 'scan', self.laser_callback, 10)
 
         # Estimated pose publisher
         self.pose_pub = self.create_publisher(PoseWithCovarianceStamped, 'estimated_pose', 10)
@@ -31,6 +34,8 @@ class SimpleOdometryNode(Node):
         
         self.prev_pose = None
         self.key = 0
+
+        self.first = True
 
 
     # Odometry callback
@@ -49,7 +54,7 @@ class SimpleOdometryNode(Node):
         # Check if it is the beggining of graph
         if self.prev_pose is None:
             # Add first node woth prior factor
-            self.graph.add(gtsam.PriorFactorPose3(sh.O(self.key), current_pose, gtsam.noiseModel.Isotropic.Sigma(6, 0.1)))
+            self.graph.add(gtsam.PriorFactorPose3(sh.O(self.key), current_pose, gtsam.noiseModel.Isotropic.Sigma(6, 0.01)))
             self.initial_estimate.insert(sh.O(self.key), current_pose)
         else:
             self.key += 1
@@ -76,13 +81,61 @@ class SimpleOdometryNode(Node):
         # Subtract in order to have 0,0 in the center of the world
         gps_x = utm_loc[0] - 631412.213
         gps_y = utm_loc[1] - 5808345.693
-        # self.get_logger().info('Received GPS fix: {0:.4f}, {0:.4f}'.format(gps_x, gps_y))
+        self.get_logger().info('Received GPS pos: {0:.4f}, {1:.4f}'.format(gps_x, gps_y))
         
         # Set up GPS noise value
         gps_noise = gtsam.noiseModel.Isotropic.Sigma(3, 0.2)
 
         # Add GPS position to graph, place it next to last odom node
         self.graph.add(gtsam.GPSFactor(sh.O(self.key), [-gps_x, -gps_y, 0.], gps_noise))
+
+
+    # Laser callback
+    def laser_callback(self, msg):
+        
+        # Localise landmark
+        prev_state = False
+        middle = False
+        angle_min = 0
+        angle_max = 0
+        distances = []
+
+        for angle, dis in enumerate(msg.ranges):
+            if(dis < 10):
+                if angle == 0 and dis < 10:
+                    middle = True
+                if not prev_state:
+                    prev_state = True
+                    angle_min = angle
+                distances.append(dis)
+            if(dis > 10 and prev_state):
+                prev_state = False
+                angle_max = angle
+
+        # Check if landmark was detected
+        if angle_min != 0 and angle_max != 0:
+            if not middle:
+                center_angle = (angle_max + angle_min) / 2.0
+            else:
+                center_angle = (angle_max - 360 + angle_min) / 2.0
+            meas_distance = mean(distances) + 0.0675
+
+            if self.first:
+                self.graph.push_back(gtsam.PriorFactorPoint3(sh.L(0), gtsam.Point3(2.5, 1.5, 0.0), gtsam.noiseModel.Isotropic.Sigma(3, 0.5)))
+                self.initial_estimate.insert(sh.L(0), gtsam.Point3(2.5, 1.5, 0.0))
+                self.first = False
+            
+            # Convert from degree to x,y on unit circle
+            x = np.cos(center_angle * np.pi/180.)
+            y = np.sin(center_angle * np.pi/180.)
+
+            # Add to graph
+            landmark_noise = gtsam.noiseModel.Isotropic.Sigma(3, 0.1)
+            self.graph.add(gtsam.BearingRangeFactor3D(sh.O(self.key), sh.L(0), gtsam.Unit3([x, y, 0.]), meas_distance, landmark_noise))
+
+            self.get_logger().info('Landmark localised: {0:.1f} deg, {1:.2f} m'.format(center_angle, meas_distance))
+        else:
+            self.get_logger().warn('Landmark not found, current position is probably too far from its location')
 
 
     # Function to optimize graph and, in result, optain current estimated pose

@@ -6,6 +6,8 @@ Jakub Junkiert 2024
 
 Projekt polega na stworzeniu systemu estymacji stanu robota wykorzystującego probablistyczne modele grafowe. System ma za zadanie lokalizować robota dwukołowego w znanej mapie na podstawie informacji pochodzącej z wielu czujników.
 
+![alt text](img/image.png)
+
 ## Opis działania
 
 TODO
@@ -41,5 +43,7 @@ ros2 run turtlebot3_teleop teleop_keyboard
 ```
 
 TODO zmiana pliku spawn
+
+TODO zmiana pliku world
 
 pip install utm
