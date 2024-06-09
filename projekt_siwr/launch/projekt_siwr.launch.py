@@ -28,19 +28,22 @@ def generate_launch_description():
         'empty_world_w_landmark.world'
     )
 
+    # Launch Gazebo Server
     gzserver_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(pkg_gazebo_ros, 'launch', 'gzserver.launch.py')
         ),
         launch_arguments={'world': world}.items()
     )
+    
+    # Launch Gazebo Client GUI
+    gzclient_cmd = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(pkg_gazebo_ros, 'launch', 'gzclient.launch.py')
+        )
+    )
 
-    # gzclient_cmd = IncludeLaunchDescription(
-    #     PythonLaunchDescriptionSource(
-    #         os.path.join(pkg_gazebo_ros, 'launch', 'gzclient.launch.py')
-    #     )
-    # )
-
+    # Launch robot state publisher
     robot_state_publisher_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(launch_file_dir, 'robot_state_publisher.launch.py')
@@ -48,6 +51,7 @@ def generate_launch_description():
         launch_arguments={'use_sim_time': use_sim_time}.items()
     )
 
+    # Spawn robot
     spawn_turtlebot_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(siwr_launch_file_dir, 'turtlebot3_spawn.launch.py')
@@ -58,6 +62,7 @@ def generate_launch_description():
         }.items()
     )
 
+    # Launch Rviz with specified config file
     rviz_cmd = Node(
         package='rviz2',
         executable='rviz2',
@@ -66,6 +71,7 @@ def generate_launch_description():
         arguments=['-d', rviz_config_file]
     )
 
+    # Launch lacaliser script
     localiser_cmd = Node(
         package='projekt_siwr',
         executable='localiser.py',
@@ -77,7 +83,7 @@ def generate_launch_description():
 
     # Add the commands to the launch description
     ld.add_action(gzserver_cmd)
-    # ld.add_action(gzclient_cmd) # Not needed
+    # ld.add_action(gzclient_cmd) # Uncomment to launch Gazebo GUI
     ld.add_action(robot_state_publisher_cmd)
     ld.add_action(spawn_turtlebot_cmd)
     ld.add_action(rviz_cmd)

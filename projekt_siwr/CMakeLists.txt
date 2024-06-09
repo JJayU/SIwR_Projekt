@@ -13,16 +13,19 @@ find_package(rclpy REQUIRED)
 
 ament_python_install_package(${PROJECT_NAME})
 
+# Copy world, config and model to project directory
 install(
   DIRECTORY worlds config models
   DESTINATION share/${PROJECT_NAME}
 )
 
+# Python scripts
 install(
   PROGRAMS scripts/localiser.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
+# Launch scripts
 install(
   PROGRAMS launch/projekt_siwr.launch.py launch/turtlebot3_spawn.launch.py
   DESTINATION share/${PROJECT_NAME}

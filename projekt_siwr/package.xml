@@ -2,9 +2,9 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>projekt_siwr</name>
-  <version>0.0.0</version>
-  <description>TODO: Package description</description>
-  <maintainer email="50557966+JJayU@users.noreply.github.com">rosdev</maintainer>
+  <version>1.0.0</version>
+  <description>Projekt SIwR</description>
+  <maintainer email="jakub.junkiert@student.put.poznan.pl">JJayU</maintainer>
   <license>TODO: License declaration</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>

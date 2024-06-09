@@ -55,7 +55,7 @@ class SimpleOdometryNode(Node):
         
         # Check if it is the beggining of graph
         if self.prev_pose is None:
-            # Add first node woth prior factor
+            # Add first node with prior factor
             self.graph.add(gtsam.PriorFactorPose3(sh.O(self.key), current_pose, gtsam.noiseModel.Isotropic.Sigma(6, 0.01)))
             self.initial_estimate.insert(sh.O(self.key), current_pose)
         else:
@@ -132,7 +132,6 @@ class SimpleOdometryNode(Node):
             y = np.sin(center_angle * np.pi/180.)
 
             # Add to graph
-            
             landmark_noise = gtsam.noiseModel.Isotropic.Sigma(3, 0.5)
             print(landmark_noise)
             self.graph.add(gtsam.BearingRangeFactor3D(sh.O(self.key), sh.L(0), gtsam.Unit3([x, y, 0.]), meas_distance, landmark_noise))
@@ -142,13 +141,14 @@ class SimpleOdometryNode(Node):
             self.get_logger().warn('Landmark not found, current position is probably too far from its location')
 
 
-    # Function to optimize graph and, in result, optain current estimated pose
+    # Function to optimize graph and, in result, obtain current estimated pose
     def optimize(self):
         # Update optimizer
         self.optimizer = gtsam.LevenbergMarquardtOptimizer(self.graph, self.initial_estimate)
 
         # Optimize only if at least two nodes exists
         if self.key > 1:
+            # Optimize
             result = self.optimizer.optimize()
 
             # Get pose and pose error
