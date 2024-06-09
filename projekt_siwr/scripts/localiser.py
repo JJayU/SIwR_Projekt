@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import gtsam.noiseModel
 import rclpy
 from rclpy.node import Node
@@ -130,7 +132,9 @@ class SimpleOdometryNode(Node):
             y = np.sin(center_angle * np.pi/180.)
 
             # Add to graph
-            landmark_noise = gtsam.noiseModel.Isotropic.Sigma(3, 0.1)
+            
+            landmark_noise = gtsam.noiseModel.Isotropic.Sigma(3, 0.5)
+            print(landmark_noise)
             self.graph.add(gtsam.BearingRangeFactor3D(sh.O(self.key), sh.L(0), gtsam.Unit3([x, y, 0.]), meas_distance, landmark_noise))
 
             self.get_logger().info('Landmark localised: {0:.1f} deg, {1:.2f} m'.format(center_angle, meas_distance))

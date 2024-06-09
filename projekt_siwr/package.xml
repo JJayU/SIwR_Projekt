@@ -3,22 +3,18 @@
 <package format="3">
   <name>projekt_siwr</name>
   <version>0.0.0</version>
-  <description>TODO: SIwR Projekt</description>
-  <maintainer email="jakub.junkiert@student.put.poznan.pl">rosdev</maintainer>
+  <description>TODO: Package description</description>
+  <maintainer email="50557966+JJayU@users.noreply.github.com">rosdev</maintainer>
   <license>TODO: License declaration</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
-  <build_depend>rclpy</build_depend>
-  <build_depend>std_msgs</build_depend>
-  <build_depend>nav_msgs</build_depend>
-  <exec_depend>rclpy</exec_depend>
-  <exec_depend>std_msgs</exec_depend>
-  <exec_depend>nav_msgs</exec_depend>
+  <buildtool_depend>ament_cmake_python</buildtool_depend>
 
-  <test_depend>ament_copyright</test_depend>
-  <test_depend>ament_flake8</test_depend>
-  <test_depend>ament_pep257</test_depend>
-  <test_depend>python3-pytest</test_depend>
+  <depend>rclcpp</depend>
+  <depend>rclpy</depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
 
   <export>
     <build_type>ament_cmake</build_type>

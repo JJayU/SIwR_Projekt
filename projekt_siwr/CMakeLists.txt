@@ -7,12 +7,24 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-# uncomment the following section in order to fill in
-# further dependencies manually.
-# find_package(<dependency> REQUIRED)
+find_package(ament_cmake_python REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(rclpy REQUIRED)
+
+ament_python_install_package(${PROJECT_NAME})
 
 install(
-  DIRECTORY config models
+  DIRECTORY worlds config models
+  DESTINATION share/${PROJECT_NAME}
+)
+
+install(
+  PROGRAMS scripts/localiser.py
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+install(
+  PROGRAMS launch/projekt_siwr.launch.py launch/turtlebot3_spawn.launch.py
   DESTINATION share/${PROJECT_NAME}
 )
 

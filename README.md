@@ -10,9 +10,14 @@ Projekt polega na stworzeniu systemu estymacji stanu robota wykorzystującego pr
 
 ## Opis działania
 
-TODO
+Program wykorzystuje probabilistyczny model grafowy stworzoony z wykorzystaniem biblioteki gtsam. Graf jest stworzony na podstawie pomiarów z trzech sensorów: odometrii, GPS oraz skanera laserowego, wykrywającego "landmark" o znanej pozycji w świecie.
 
 ## Uruchamianie
+
+Należy zainstalować dodatkową bibliotekę do Pythona:
+```bash
+pip install utm
+```
 
 Pakiet należy zbudować:
 ```bash
@@ -20,30 +25,14 @@ colcon build
 . install/setup.bash
 ```
 
-Pierwszym krokiem jest uruchomienie symulacji z wykorzystaniem następujących komend:
+Paczkę uruchamia się komendą:
 ```bash
-export TURTLEBOT3_MODEL=waffle
-ros2 launch turtlebot3_gazebo empty_world.launch.py
+ros2 launch projekt_siwr projekt_siwr.launch.py
 ```
-
-Następnie należy uruchomić Rviz2:
-```bash
-rviz2 -d /home/rosdev/ros2_ws/src/projekt_siwr/config/rviz_config.rviz
-```
-
-Ostatnim krokiem jest uruchomienie paczki z projektem poprzez komendę:
-```bash
-ros2 run projekt_siwr projekt_siwr
-```
+W wyniku jej wywołania powinien się uruchomić Rviz2 z robotem na środku mapy, z widoczną strzałką oznaczającą przewidywaną pozycją robota oraz z widocznymi punktami będącymi skanem laserowym, wyszukującym pozycję landmarka.
 
 W celu poruszania robotem można uruchomić program:
 ```bash
 export TURTLEBOT3_MODEL=waffle
 ros2 run turtlebot3_teleop teleop_keyboard
 ```
-
-TODO zmiana pliku spawn
-
-TODO zmiana pliku world
-
-pip install utm
